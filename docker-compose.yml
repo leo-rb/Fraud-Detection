@@ -1,7 +1,11 @@
+<<<<<<< HEAD
+services:
+=======
 version: '3.8'
 
 services:
   # 1. Base de données (Stocke les logs MLflow et les données métier)
+>>>>>>> 201fa80279b6c51131516b8dc65c72db584e6dae
   postgres:
     image: postgres:13
     container_name: mlops_postgres
@@ -11,36 +15,67 @@ services:
       POSTGRES_DB: mlops_db
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
     networks:
       - mlops_net
 
-  # 2. MLflow Tracking Server (Interface graphique & Registry)
   mlflow:
-    image: ghcr.io/mlflow/mlflow:v2.7.1
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.mlflow
     container_name: mlops_mlflow
+    hostname: mlflow
     ports:
       - "5000:5000"
     environment:
-      # MLflow va stocker ses métadonnées dans Postgres
       MLFLOW_BACKEND_STORE_URI: postgresql://user:password@postgres:5432/mlops_db
       MLFLOW_ARTIFACT_ROOT: /mlflow/artifacts
-    command: >
-      mlflow server
-      --backend-store-uri postgresql://user:password@postgres:5432/mlops_db
-      --host 0.0.0.0
-      --default-artifact-root /mlflow/artifacts
+    command: mlflow server --backend-store-uri postgresql://user:password@postgres:5432/mlops_db --host 0.0.0.0 --port 5000 --default-artifact-root /mlflow/artifacts --allowed-hosts "mlflow,mlflow:5000,localhost,localhost:5000"
     volumes:
-      - ./mlflow_artifacts:/mlflow/artifacts # Stockage local des modèles (pour simplifier au début)
+      - ./mlflow_artifacts:/mlflow/artifacts
     depends_on:
       - postgres
     restart: always
     networks:
       - mlops_net
 
+<<<<<<< HEAD
+  api:
+    build:
+      context: ./app
+    container_name: mlops_api
+    ports:
+      - "8000:8000"
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000 
+    volumes:
+      - ./mlflow_artifacts:/mlflow/artifacts
+    depends_on:
+      - mlflow
+    networks:
+      - mlops_net
+
+  train:
+    build:
+      context: ./app
+    container_name: mlops_trainer
+    volumes:
+      - ${PWD}:/app
+      - ./mlflow_artifacts:/mlflow/artifacts
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    depends_on:
+      - mlflow
+    networks:
+      - mlops_net
+    command: python /app/ml_core/train.py
+
+networks:
+  mlops_net:
+    driver: bridge
+=======
 networks:
   mlops_net:
 
 volumes:
   postgres_data:
+>>>>>>> 201fa80279b6c51131516b8dc65c72db584e6dae
