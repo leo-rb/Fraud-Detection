@@ -24,3 +24,10 @@ Le projet repose sur 5 services interconnectés via Docker :
 ```bash
 git clone [https://github.com/VOTRE_NOM/Fraud-Detection.git](https://github.com/VOTRE_NOM/Fraud-Detection.git)
 cd Fraud-Detection
+
+**2. Ajouter les données**
+Note : Le dataset complet (144 Mo) n'est pas versionné sur GitHub.
+
+Téléchargez le dataset creditcard.csv depuis Kaggle - Credit Card Fraud Detection.
+
+Placez le fichier creditcard.csv dans le dossier data/ à la racine du projet.
