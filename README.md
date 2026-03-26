@@ -1,10 +1,10 @@
-# 🚨 Fraud Detection MLOps Pipeline
+# Fraud Detection MLOps Pipeline
 
 Bienvenue dans ce projet complet de détection de fraude bancaire, conçu avec une architecture MLOps robuste et conteneurisée. 
 
 Ce projet démontre la mise en production d'un modèle de Machine Learning (Random Forest) de l'entraînement jusqu'au déploiement via une API REST et une interface utilisateur interactive.
 
-## 🏗️ Architecture Technique
+## Architecture Technique
 
 Le projet repose sur 5 services interconnectés via Docker :
 * **PostgreSQL** : Base de données relationnelle pour stocker les métadonnées des modèles.
@@ -13,12 +13,12 @@ Le projet repose sur 5 services interconnectés via Docker :
 * **FastAPI** : API REST qui charge dynamiquement le meilleur modèle depuis MLflow pour effectuer des prédictions.
 * **Streamlit** : Interface web utilisateur pour tester le modèle en temps réel.
 
-## ⚙️ Prérequis
+## Prérequis
 
 * [Docker](https://www.docker.com/products/docker-desktop/) et Docker Compose installés sur votre machine.
 * Git.
 
-## 🚀 Comment lancer le projet (Plug & Play)
+## Comment lancer le projet (Plug & Play)
 
 **1. Cloner le dépôt**
 ```bash
