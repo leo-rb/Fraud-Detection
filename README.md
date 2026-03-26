@@ -21,7 +21,7 @@ Le projet repose sur 5 services interconnectés via Docker :
 ## Comment lancer le projet (Plug & Play)
 
 **1. Cloner le dépôt**
-```bash
+'''bash
 git clone [https://github.com/VOTRE_NOM/Fraud-Detection.git](https://github.com/VOTRE_NOM/Fraud-Detection.git)
 cd Fraud-Detection
 
