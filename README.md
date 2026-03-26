@@ -26,6 +26,7 @@ git clone [https://github.com/VOTRE_NOM/Fraud-Detection.git](https://github.com/
 cd Fraud-Detection
 ```
 **2. Ajouter les données**
+
 Note : Le dataset complet (144 Mo) n'est pas versionné sur GitHub.
 
 Téléchargez le dataset creditcard.csv depuis Kaggle - Credit Card Fraud Detection.
