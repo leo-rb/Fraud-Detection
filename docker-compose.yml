@@ -1,11 +1,4 @@
-<<<<<<< HEAD
 services:
-=======
-version: '3.8'
-
-services:
-  # 1. Base de données (Stocke les logs MLflow et les données métier)
->>>>>>> 201fa80279b6c51131516b8dc65c72db584e6dae
   postgres:
     image: postgres:13
     container_name: mlops_postgres
@@ -38,7 +31,6 @@ services:
     networks:
       - mlops_net
 
-<<<<<<< HEAD
   api:
     build:
       context: ./app
@@ -46,7 +38,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - MLFLOW_TRACKING_URI=http://mlflow:5000 
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
     volumes:
       - ./mlflow_artifacts:/mlflow/artifacts
     depends_on:
@@ -69,13 +61,20 @@ services:
       - mlops_net
     command: python /app/ml_core/train.py
 
+  frontend:
+    image: python:3.9-slim
+    container_name: mlops_frontend
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./frontend:/app
+    working_dir: /app
+    command: sh -c "pip install streamlit requests && streamlit run app.py --server.port=8501 --server.address=0.0.0.0"
+    networks:
+      - mlops_net
+    depends_on:
+      - api
+
 networks:
   mlops_net:
     driver: bridge
-=======
-networks:
-  mlops_net:
-
-volumes:
-  postgres_data:
->>>>>>> 201fa80279b6c51131516b8dc65c72db584e6dae
