@@ -22,7 +22,7 @@ Le projet repose sur 5 services interconnectés via Docker :
 
 **1. Cloner le dépôt**
 ```bash
-git clone [https://github.com/VOTRE_NOM/Fraud-Detection.git](https://github.com/VOTRE_NOM/Fraud-Detection.git)
+git clone [https://github.com/leo-rb/Fraud-Detection.git](https://github.com/leo-rb/Fraud-Detection.git)
 cd Fraud-Detection
 ```
 **2. Ajouter les données**
@@ -32,3 +32,27 @@ Note : Le dataset complet (144 Mo) n'est pas versionné sur GitHub.
 Téléchargez le dataset creditcard.csv depuis Kaggle - Credit Card Fraud Detection.
 
 Placez le fichier creditcard.csv dans le dossier data/ à la racine du projet.
+
+**3. Démarrer l'infrastructure**
+```bash
+docker-compose up -d
+```
+Docker va automatiquement construire les images, démarrer la base de données, lancer le serveur MLflow, entraîner le modèle, et exposer l'API et l'interface Web.
+
+## Accès aux interfaces ##
+
+Une fois les conteneurs démarrés, vous pouvez accéder aux services suivants depuis votre navigateur :
+
+Interface Utilisateur (Streamlit) : http://localhost:8501
+
+Tracking MLflow : http://localhost:5000
+
+API REST (FastAPI / Swagger UI) : http://localhost:8000/docs
+
+## Nettoyage ##
+
+Pour éteindre et supprimer les conteneurs proprement :
+
+```bash
+docker-compose down
+```
