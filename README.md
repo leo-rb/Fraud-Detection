@@ -4,65 +4,6 @@ Bienvenue dans ce projet complet de détection de fraude bancaire, conçu avec u
 
 Ce projet démontre la mise en production d'un modèle de Machine Learning (Random Forest) de l'entraînement jusqu'au déploiement via une API REST et une interface utilisateur interactive.
 
-graph TD
-    %% Définition des styles
-    classDef storage fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef compute fill:#bbf,stroke:#333,stroke-width:2px;
-    classDef interface fill:#dfd,stroke:#333,stroke-width:2px;
-    classDef user fill:#fff,stroke:#333,stroke-width:4px;
-
-    %% Les Acteurs et Données Extérieures
-    Utilisateur((Recruteur / <br/>Manager)):::user
-    Dataset(Kaggle: <br/>creditcard.csv):::storage
-
-    %% Le Réseau Docker (Frontière virtuelle)
-    subgraph DockerNet[Réseau Virtuel Docker Compose]
-        direction TB
-
-        %% Bloc Stockage
-        subgraph Stockage[Persistance des Données]
-            Postgres[(🐘 PostgreSQL <br/> Métadonnées MLflow)]:::storage
-            Volume[(📂 Volume Partagé <br/> Artefacts Modèles)]:::storage
-        end
-
-        %% Bloc MLOps
-        subgraph MLOps[Tracking & Registry]
-            MLflow(📈 Serveur MLflow <br/> Tracking Experimentations):::compute
-        end
-
-        %% Bloc Entraînement
-        subgraph Calcul[Pipeline ML]
-            Trainer[🐍 Script Python <br/> Entraînement & SMOTE]:::compute
-        end
-
-        %% Bloc Inférence (Production)
-        subgraph Production[Zone de Service]
-            API[⚡ FastAPI <br/> Serveur d'Inférence]:::compute
-            Streamlit[🎨 Interface Streamlit <br/> Web App]:::interface
-        end
-    end
-
-    %% Les Flux Logiques (Les flèches)
-    Dataset -.->|1. Manuel| Trainer
-    Utilisateur ==>|2. docker-compose up| DockerNet
-    
-    %% Flux Entraînement
-    Trainer -->|3a. Log Métriques| MLflow
-    MLflow -->|3b. Sauvegarde| Postgres
-    Trainer -->|3c. Sauvegarde .pkl| Volume
-    
-    %% Flux Inférence
-    API -->|4a. Charge modèle| Volume
-    API -.->|4b. Vérifie Registry| MLflow
-    Utilisateur ==>|5. Teste la fraude| Streamlit
-    Streamlit ==>|6. Requête POST| API
-    API ==>|7. Prédiction JSON| Streamlit
-
-    %% Légende masquée pour styles
-    %% class Dataset,Postgres,Volume storage;
-    %% class MLflow,Trainer,API compute;
-    %% class Streamlit interface;
-
 ## Architecture Technique
 
 Le projet repose sur 5 services interconnectés via Docker :
