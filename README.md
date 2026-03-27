@@ -4,64 +4,45 @@ Bienvenue dans ce projet complet de détection de fraude bancaire, conçu avec u
 
 Ce projet démontre la mise en production d'un modèle de Machine Learning (Random Forest) de l'entraînement jusqu'au déploiement via une API REST et une interface utilisateur interactive.
 
+```
 graph TD
-    %% Définition des styles
-    classDef storage fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef compute fill:#bbf,stroke:#333,stroke-width:2px;
-    classDef interface fill:#dfd,stroke:#333,stroke-width:2px;
-    classDef user fill:#fff,stroke:#333,stroke-width:4px;
+    %% Acteurs extérieurs
+    User(("👤 Recruteur / Utilisateur"))
+    Data[("📁 creditcard.csv (Kaggle)")]
 
-    %% Les Acteurs et Données Extérieures
-    Utilisateur((Recruteur / <br/>Manager)):::user
-    Dataset(Kaggle: <br/>creditcard.csv):::storage
-
-    %% Le Réseau Docker (Frontière virtuelle)
-    subgraph DockerNet[Réseau Virtuel Docker Compose]
+    subgraph "Infrastructure Docker (Réseau mlops_net)"
         direction TB
-
-        %% Bloc Stockage
-        subgraph Stockage[Persistance des Données]
-            Postgres[(🐘 PostgreSQL <br/> Métadonnées MLflow)]:::storage
-            Volume[(📂 Volume Partagé <br/> Artefacts Modèles)]:::storage
+        
+        subgraph "1. Zone de Données & Tracking"
+            DB[("🐘 PostgreSQL (Métadonnées)")]
+            Volume[("📂 Volume Local (Modèles .pkl)")]
+            MLflow("📈 Serveur MLflow")
         end
-
-        %% Bloc MLOps
-        subgraph MLOps[Tracking & Registry]
-            MLflow(📈 Serveur MLflow <br/> Tracking Experimentations):::compute
+        
+        subgraph "2. Zone d'Entraînement"
+            Trainer("🐍 Script d'Entraînement (train.py)")
         end
-
-        %% Bloc Entraînement
-        subgraph Calcul[Pipeline ML]
-            Trainer[🐍 Script Python <br/> Entraînement & SMOTE]:::compute
-        end
-
-        %% Bloc Inférence (Production)
-        subgraph Production[Zone de Service]
-            API[⚡ FastAPI <br/> Serveur d'Inférence]:::compute
-            Streamlit[🎨 Interface Streamlit <br/> Web App]:::interface
+        
+        subgraph "3. Zone de Production"
+            API("⚡ API REST (FastAPI)")
+            UI("🎨 Interface Web (Streamlit)")
         end
     end
 
-    %% Les Flux Logiques (Les flèches)
-    Dataset -.->|1. Manuel| Trainer
-    Utilisateur ==>|2. docker-compose up| DockerNet
+    %% Flux d'exécution
+    Data -.->|"Ajout manuel"| Trainer
+    User ==>|"docker-compose up"| UI
     
-    %% Flux Entraînement
-    Trainer -->|3a. Log Métriques| MLflow
-    MLflow -->|3b. Sauvegarde| Postgres
-    Trainer -->|3c. Sauvegarde .pkl| Volume
+    Trainer -->|"1. Log des métriques"| MLflow
+    MLflow -->|"2. Sauvegarde"| DB
+    Trainer -->|"3. Enregistre le modèle"| Volume
     
-    %% Flux Inférence
-    API -->|4a. Charge modèle| Volume
-    API -.->|4b. Vérifie Registry| MLflow
-    Utilisateur ==>|5. Teste la fraude| Streamlit
-    Streamlit ==>|6. Requête POST| API
-    API ==>|7. Prédiction JSON| Streamlit
-
-    %% Légende masquée pour styles
-    %% class Dataset,Postgres,Volume storage;
-    %% class MLflow,Trainer,API compute;
-    %% class Streamlit interface;
+    API -->|"4. Charge le modèle"| Volume
+    API -.->|"5. Vérifie le registre"| MLflow
+    
+    UI ==>|"6. Envoie les 30 features"| API
+    API ==>|"7. Retourne la prédiction"| UI
+```
 
 ## Architecture Technique
 
