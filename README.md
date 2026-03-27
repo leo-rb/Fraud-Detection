@@ -4,45 +4,8 @@ Bienvenue dans ce projet complet de détection de fraude bancaire, conçu avec u
 
 Ce projet démontre la mise en production d'un modèle de Machine Learning (Random Forest) de l'entraînement jusqu'au déploiement via une API REST et une interface utilisateur interactive.
 
-```
-graph TD
-    %% Acteurs extérieurs
-    User(("👤 Recruteur / Utilisateur"))
-    Data[("📁 creditcard.csv (Kaggle)")]
+<img width="3547" height="2045" alt="Utilisateur Recruteur-2026-03-27-082538" src="https://github.com/user-attachments/assets/6b9d3950-da3c-41c3-ab8b-f1e3f12dfad1" />
 
-    subgraph "Infrastructure Docker (Réseau mlops_net)"
-        direction TB
-        
-        subgraph "1. Zone de Données & Tracking"
-            DB[("🐘 PostgreSQL (Métadonnées)")]
-            Volume[("📂 Volume Local (Modèles .pkl)")]
-            MLflow("📈 Serveur MLflow")
-        end
-        
-        subgraph "2. Zone d'Entraînement"
-            Trainer("🐍 Script d'Entraînement (train.py)")
-        end
-        
-        subgraph "3. Zone de Production"
-            API("⚡ API REST (FastAPI)")
-            UI("🎨 Interface Web (Streamlit)")
-        end
-    end
-
-    %% Flux d'exécution
-    Data -.->|"Ajout manuel"| Trainer
-    User ==>|"docker-compose up"| UI
-    
-    Trainer -->|"1. Log des métriques"| MLflow
-    MLflow -->|"2. Sauvegarde"| DB
-    Trainer -->|"3. Enregistre le modèle"| Volume
-    
-    API -->|"4. Charge le modèle"| Volume
-    API -.->|"5. Vérifie le registre"| MLflow
-    
-    UI ==>|"6. Envoie les 30 features"| API
-    API ==>|"7. Retourne la prédiction"| UI
-```
 
 ## Architecture Technique
 
